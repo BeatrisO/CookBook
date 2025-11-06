@@ -2,76 +2,69 @@ package com.example.cookbook.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.example.cookbook.data.MealDetail
-import com.example.cookbook.data.RetrofitInstance
 
 @Composable
-fun DessertDetailScreen(mealId: String) {
-    var mealDetail by remember { mutableStateOf<MealDetail?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var hasError by remember { mutableStateOf(false) }
+fun DessertDetailScreen(mealId: String, viewModel: DessertDetailViewModel = viewModel()) {
+    val mealDetail by viewModel.mealDetail.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val hasError by viewModel.hasError.collectAsState()
 
     LaunchedEffect(mealId) {
-        try {
-            val response = RetrofitInstance.api.getMealDetail(mealId)
-            mealDetail = response.meals.firstOrNull()
-            isLoading = false
-        } catch (e: Exception) {
-            hasError = true
-            isLoading = false
-        }
+        viewModel.loadMealDetail(mealId)
     }
 
     when {
-        isLoading -> Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
+        isLoading -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
 
-        hasError -> Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
+        hasError -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Erro ao carregar detalhes da sobremesa")
         }
 
-        else -> mealDetail?.let { detail ->
+        mealDetail != null -> {
+            val detail = mealDetail!!
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(detail.strMealThumb),
                     contentDescription = detail.strMeal,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(250.dp)
+                        .height(220.dp)
                 )
-                Spacer(Modifier.height(12.dp))
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     text = detail.strMeal,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineMedium
                 )
-                Spacer(Modifier.height(8.dp))
 
-                Text("Categoria: ${detail.strCategory}")
-                Text("Origem: ${detail.strArea}")
-                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = "${detail.strCategory} | ${detail.strArea}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Preparation Method:",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
                     text = detail.strInstructions,
