@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument("mealId") { type = NavType.StringType })
                         ) { backStackEntry ->
                             val mealId = backStackEntry.arguments?.getString("mealId") ?: ""
-                            DessertDetailScreen(mealId = mealId)
+                            DessertDetailScreen(mealId = mealId, navController = navController)
                         }
                     }
                 }
