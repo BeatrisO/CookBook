@@ -41,7 +41,7 @@ fun DessertListScreen(onMealClick: (String) -> Unit) {
             CircularProgressIndicator()
         }
         hasError -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Erro ao carregar sobremesas")
+            Text("Error loading desserts")
         }
         else -> LazyColumn(
             contentPadding = PaddingValues(16.dp),
