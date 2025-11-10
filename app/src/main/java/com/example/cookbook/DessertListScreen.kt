@@ -16,31 +16,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.cookbook.data.Meal
-import com.example.cookbook.data.RetrofitInstance
 
 @Composable
-fun DessertListScreen(onMealClick: (String) -> Unit) {
-    var desserts by remember { mutableStateOf<List<Meal>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
-    var hasError by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        try {
-            desserts = RetrofitInstance.api.getDesserts().meals
-            isLoading = false
-        } catch (e: Exception) {
-            hasError = true
-            isLoading = false
-        }
-    }
+fun DessertListScreen(
+    viewModel: DessertViewModel = viewModel(),
+    onMealClick: (String) -> Unit
+) {
+    val desserts by viewModel.desserts.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val hasError by viewModel.hasError.collectAsState()
 
     when {
-        isLoading -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        isLoading -> Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             CircularProgressIndicator()
         }
-        hasError -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+
+        hasError -> Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             Text("Error loading desserts")
         }
         else -> LazyColumn(

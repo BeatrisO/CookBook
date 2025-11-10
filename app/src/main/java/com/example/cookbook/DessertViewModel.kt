@@ -3,13 +3,12 @@ package com.example.cookbook.ui.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookbook.data.Meal
-import com.example.cookbook.data.repository.DessertRepository
+import com.example.cookbook.data.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class DessertViewModel : ViewModel() {
-    private val repository = DessertRepository()
 
     private val _desserts = MutableStateFlow<List<Meal>>(emptyList())
     val desserts: StateFlow<List<Meal>> = _desserts
@@ -21,16 +20,18 @@ class DessertViewModel : ViewModel() {
     val hasError: StateFlow<Boolean> = _hasError
 
     init {
-        loadDesserts()
+        fetchDesserts()
     }
 
-    private fun loadDesserts() {
+    private fun fetchDesserts() {
         viewModelScope.launch {
             try {
-                _desserts.value = repository.getDesserts()
-                _isLoading.value = false
+                _isLoading.value = true
+                val response = RetrofitInstance.api.getDesserts()
+                _desserts.value = response.meals ?: emptyList()
             } catch (e: Exception) {
                 _hasError.value = true
+            } finally {
                 _isLoading.value = false
             }
         }
