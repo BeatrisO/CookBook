@@ -1,18 +1,15 @@
-package com.example.cookbook.ui.screens
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookbook.data.MealDetail
-import com.example.cookbook.data.repository.DessertDetailRepository
+import com.example.cookbook.data.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class DessertDetailViewModel : ViewModel() {
-    private val repository = DessertDetailRepository()
 
-    private val _mealDetail = MutableStateFlow<MealDetail?>(null)
-    val mealDetail: StateFlow<MealDetail?> = _mealDetail
+    private val _dessertDetail = MutableStateFlow<MealDetail?>(null)
+    val dessertDetail: StateFlow<MealDetail?> = _dessertDetail
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -20,13 +17,15 @@ class DessertDetailViewModel : ViewModel() {
     private val _hasError = MutableStateFlow(false)
     val hasError: StateFlow<Boolean> = _hasError
 
-    fun loadMealDetail(mealId: String) {
+    fun fetchDessertDetail(mealId: String) {
         viewModelScope.launch {
             try {
-                _mealDetail.value = repository.getMealDetail(mealId)
-                _isLoading.value = false
+                _isLoading.value = true
+                val response = RetrofitInstance.api.getMealDetail(mealId)
+                _dessertDetail.value = response.meals.firstOrNull()
             } catch (e: Exception) {
                 _hasError.value = true
+            } finally {
                 _isLoading.value = false
             }
         }

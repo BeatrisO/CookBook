@@ -1,5 +1,6 @@
 package com.example.cookbook.ui.screens
 
+import DessertDetailViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import androidx.navigation.NavController
 import com.example.cookbook.data.getIngredients
@@ -21,14 +21,14 @@ import com.example.cookbook.data.getIngredients
 fun DessertDetailScreen(
     mealId: String,
     navController: NavController,
-    viewModel: DessertDetailViewModel = viewModel()
+    viewModel: DessertDetailViewModel = DessertDetailViewModel()
 ) {
-    val mealDetail by viewModel.mealDetail.collectAsState()
+    val mealDetail by viewModel.dessertDetail.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val hasError by viewModel.hasError.collectAsState()
 
     LaunchedEffect(mealId) {
-        viewModel.loadMealDetail(mealId)
+        viewModel.fetchDessertDetail(mealId)
     }
 
     Scaffold(
