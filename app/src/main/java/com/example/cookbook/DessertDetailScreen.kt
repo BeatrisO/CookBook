@@ -4,7 +4,6 @@ import DessertDetailViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -113,11 +112,32 @@ fun DessertDetailScreen(
                             )
                         }
 
-                        items(ingredientsList) { ingredient ->
-                            Text(
-                                text = "• $ingredient",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                        item {
+                            val half = (ingredientsList.size + 1) / 2
+                            val column1 = ingredientsList.take(half)
+                            val column2 = ingredientsList.drop(half)
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    column1.forEach { ingredient ->
+                                        Text(
+                                            text = "• $ingredient",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                }
+                                Column(modifier = Modifier.weight(1f)) {
+                                    column2.forEach { ingredient ->
+                                        Text(
+                                            text = "• $ingredient",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                }
+                            }
                         }
 
                         item {
