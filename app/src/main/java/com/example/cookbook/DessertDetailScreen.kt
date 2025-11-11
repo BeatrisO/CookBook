@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import androidx.navigation.NavController
@@ -84,14 +85,21 @@ fun DessertDetailScreen(
                         }
 
                         item {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
                                 Text(
                                     text = detail.strMeal,
-                                    style = MaterialTheme.typography.headlineMedium
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center
                                 )
                                 Text(
                                     text = "${detail.strCategory} | ${detail.strArea}",
-                                    style = MaterialTheme.typography.bodySmall
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center
                                 )
                             }
                         }
@@ -99,7 +107,9 @@ fun DessertDetailScreen(
                         item {
                             Text(
                                 text = "Ingredients:",
-                                style = MaterialTheme.typography.titleMedium
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
                             )
                         }
 
@@ -113,7 +123,9 @@ fun DessertDetailScreen(
                         item {
                             Text(
                                 text = "Instructions:",
-                                style = MaterialTheme.typography.titleMedium
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
                             )
                         }
 
@@ -129,4 +141,3 @@ fun DessertDetailScreen(
         }
     }
 }
-
