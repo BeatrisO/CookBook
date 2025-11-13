@@ -8,44 +8,48 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import androidx.navigation.navArgument
+import com.example.cookbook.ui.theme.CookBookTheme
 import com.example.cookbook.ui.screens.DessertListScreen
 import com.example.cookbook.ui.screens.DessertDetailScreen
-import com.example.cookbook.ui.theme.CookBookTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CookBookTheme {
-                Box(modifier = Modifier.padding(WindowInsets.systemBars.asPaddingValues())) {
-                    val navController = rememberNavController()
+            CookBookApp()
+        }
+    }
+}
 
-                    NavHost(
-                        navController = navController,
-                        startDestination = "dessertList"
-                    ) {
-                        composable("dessertList") {
-                            DessertListScreen(
-                                onMealClick = { mealId ->
-                                    navController.navigate("dessertDetail/$mealId")
-                                }
-                            )
-                        }
+@Composable
+fun CookBookApp() {
+    CookBookTheme {
+        val navController = rememberNavController()
 
-                        composable(
-                            route = "dessertDetail/{mealId}",
-                            arguments = listOf(navArgument("mealId") { type = NavType.StringType })
-                        ) { backStackEntry ->
-                            val mealId = backStackEntry.arguments?.getString("mealId") ?: ""
-                            DessertDetailScreen(mealId = mealId, navController = navController)
+        Box(modifier = Modifier.padding(WindowInsets.systemBars.asPaddingValues())) {
+            NavHost(
+                navController = navController,
+                startDestination = "dessertList"
+            ) {
+                composable("dessertList") {
+                    DessertListScreen(
+                        onMealClick = { mealId ->
+                            navController.navigate("dessertDetail/$mealId")
                         }
-                    }
+                    )
+                }
+
+                composable(
+                    route = "dessertDetail/{mealId}",
+                    arguments = listOf(navArgument("mealId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val mealId = backStackEntry.arguments?.getString("mealId") ?: ""
+                    DessertDetailScreen(mealId = mealId, navController = navController)
                 }
             }
         }

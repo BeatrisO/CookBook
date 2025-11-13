@@ -16,6 +16,7 @@ import coil.compose.rememberAsyncImagePainter
 import androidx.navigation.NavController
 import com.example.cookbook.data.getIngredients
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DessertDetailScreen(
@@ -35,17 +36,23 @@ fun DessertDetailScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Dessert Details") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
-                }
+                },
+                modifier = Modifier.height(48.dp),
+                windowInsets = WindowInsets(0, 0, 0, 0)
             )
         }
-    ) { innerPadding ->
+    )
+
+    { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when {
                 isLoading -> Box(
