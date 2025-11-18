@@ -1,5 +1,6 @@
 package com.example.cookbook
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
@@ -22,6 +25,14 @@ import com.example.cookbook.ui.screens.DessertListScreen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = true
+        }
         setContent {
             CookBookApp()
         }

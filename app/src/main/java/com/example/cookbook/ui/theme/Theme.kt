@@ -1,10 +1,15 @@
 package com.example.cookbook.ui.theme
 
+import android.app.Activity
+import android.os.Build
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 private val LightColors = lightColorScheme(
     primary = Color(0xFFFF8A80),
@@ -18,13 +23,23 @@ private val LightColors = lightColorScheme(
 
 @Composable
 fun CookBookTheme(content: @Composable () -> Unit) {
-    val systemUiController = rememberSystemUiController()
+
+    val activity = LocalContext.current as Activity
 
     SideEffect {
-        systemUiController.setSystemBarsColor(
-            color = LightColors.primary,
-            darkIcons = true
-        )
+        val window = activity.window
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        window.statusBarColor = Color.Transparent.toArgb()
+
+        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
+
+        insetsController.isAppearanceLightStatusBars = true
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            insetsController.isAppearanceLightNavigationBars = true
+        }
     }
 
     MaterialTheme(
