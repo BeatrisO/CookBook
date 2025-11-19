@@ -54,10 +54,12 @@ fun DessertDetailBottomSheet(
                 navController.popBackStack()
             }
         },
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+        containerColor = MaterialTheme.colorScheme.background
     ) {
 
         when {
+
             isLoading -> {
                 Box(
                     modifier = Modifier
@@ -65,7 +67,9 @@ fun DessertDetailBottomSheet(
                         .padding(32.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
 
@@ -76,7 +80,10 @@ fun DessertDetailBottomSheet(
                         .padding(32.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Error loading details")
+                    Text(
+                        text = "Error loading details",
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
 
@@ -136,11 +143,13 @@ fun DessertDetailBottomSheet(
                         ) {
                             Text(
                                 detail.strMeal,
-                                style = MaterialTheme.typography.headlineMedium
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                             Text(
                                 "${detail.strCategory} | ${detail.strArea}",
-                                style = MaterialTheme.typography.bodySmall
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                             )
                         }
                     }
@@ -149,6 +158,7 @@ fun DessertDetailBottomSheet(
                         Text(
                             text = "Ingredients",
                             style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
                         )
@@ -164,10 +174,18 @@ fun DessertDetailBottomSheet(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
-                                col1.forEach { Text("• $it") }
+                                col1.forEach {
+                                    Text(text = "• $it",
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                }
                             }
                             Column(modifier = Modifier.weight(1f)) {
-                                col2.forEach { Text("• $it") }
+                                col2.forEach {
+                                    Text(text = "• $it",
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                }
                             }
                         }
                     }
@@ -176,13 +194,17 @@ fun DessertDetailBottomSheet(
                         Text(
                             text = "Instructions",
                             style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
                         )
                     }
 
                     item {
-                        Text(detail.strInstructions)
+                        Text(
+                            text = detail.strInstructions,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
 
                     item { Spacer(modifier = Modifier.height(32.dp)) }

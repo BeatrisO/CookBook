@@ -1,6 +1,7 @@
 package com.example.cookbook.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,15 +37,19 @@ fun DessertListScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         }
 
         hasError -> Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Error loading desserts")
+            Text(
+                "Error loading desserts",
+                color = MaterialTheme.colorScheme.error
+            )
         }
+
         else -> LazyColumn(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -66,6 +71,9 @@ fun DessertCard(meal: Meal, onClick: () -> Unit) {
             .height(120.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Row(modifier = Modifier.padding(8.dp)) {
@@ -82,6 +90,7 @@ fun DessertCard(meal: Meal, onClick: () -> Unit) {
             Text(
                 text = meal.strMeal,
                 style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
