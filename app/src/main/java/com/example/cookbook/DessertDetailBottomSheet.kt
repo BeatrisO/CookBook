@@ -1,12 +1,11 @@
 package com.example.cookbook.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -91,28 +90,25 @@ fun DessertDetailBottomSheet(
                 val detail = mealDetail
                 val ingredients = detail.getIngredients()
 
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 16.dp, top = 8.dp),
-                    contentAlignment = Alignment.TopEnd
+                        .padding(start = 8.dp, top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+
                     IconButton(
                         onClick = {
                             scope.launch {
                                 sheetState.hide()
                                 navController.popBackStack()
                             }
-                        },
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(MaterialTheme.colorScheme.surface)
+                        }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Close,
+                            imageVector = Icons.Default.KeyboardArrowDown,
                             contentDescription = "Close",
-                            tint = MaterialTheme.colorScheme.onSurface
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
