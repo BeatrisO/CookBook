@@ -1,6 +1,5 @@
 package com.example.cookbook.ui.screens
 
-import DessertDetailViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -27,15 +27,16 @@ fun DessertDetailBottomSheet(
     navController: NavController,
     viewModel: DessertDetailViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val mealDetail by viewModel.dessertDetail.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val hasError by viewModel.hasError.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+    val mealDetail = uiState.mealDetail
+    val isLoading = uiState.isLoading
+    val hasError = uiState.hasError
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(mealId) {
-        viewModel.fetchDessertDetail(mealId)
+        viewModel.loadDessertDetail(mealId)
     }
 
     LaunchedEffect(mealDetail, hasError) {
@@ -59,7 +60,6 @@ fun DessertDetailBottomSheet(
     ) {
 
         when {
-
             isLoading -> {
                 Box(
                     modifier = Modifier
@@ -88,7 +88,7 @@ fun DessertDetailBottomSheet(
             }
 
             mealDetail != null -> {
-                val detail = mealDetail!!
+                val detail = mealDetail
                 val ingredients = detail.getIngredients()
 
                 Box(
@@ -160,7 +160,7 @@ fun DessertDetailBottomSheet(
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.fillMaxWidth(),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            textAlign = TextAlign.Center
                         )
                     }
 
@@ -175,16 +175,12 @@ fun DessertDetailBottomSheet(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 col1.forEach {
-                                    Text(text = "• $it",
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
+                                    Text("• $it", color = MaterialTheme.colorScheme.onBackground)
                                 }
                             }
                             Column(modifier = Modifier.weight(1f)) {
                                 col2.forEach {
-                                    Text(text = "• $it",
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
+                                    Text("• $it", color = MaterialTheme.colorScheme.onBackground)
                                 }
                             }
                         }
@@ -192,17 +188,17 @@ fun DessertDetailBottomSheet(
 
                     item {
                         Text(
-                            text = "Instructions",
+                            "Instructions",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
 
                     item {
                         Text(
-                            text = detail.strInstructions,
+                            detail.strInstructions,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }

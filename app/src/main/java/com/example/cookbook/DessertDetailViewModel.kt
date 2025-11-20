@@ -1,32 +1,44 @@
+package com.example.cookbook.ui.screens
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cookbook.data.MealDetail
-import com.example.cookbook.data.RetrofitInstance
+import com.example.cookbook.data.repository.DessertDetailRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class DessertDetailViewModel : ViewModel() {
+class DessertDetailViewModel(
+    private val repository: DessertDetailRepository = DessertDetailRepository()
+) : ViewModel() {
 
-    private val _dessertDetail = MutableStateFlow<MealDetail?>(null)
-    val dessertDetail: StateFlow<MealDetail?> = _dessertDetail
+    private val _uiState = MutableStateFlow(DessertDetailUiState(isLoading = true))
+    val uiState: StateFlow<DessertDetailUiState> = _uiState
 
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading
-
-    private val _hasError = MutableStateFlow(false)
-    val hasError: StateFlow<Boolean> = _hasError
-
-    fun fetchDessertDetail(mealId: String) {
+    fun loadDessertDetail(mealId: String) {
         viewModelScope.launch {
+            _uiState.value = DessertDetailUiState(isLoading = true)
+
             try {
-                _isLoading.value = true
-                val response = RetrofitInstance.api.getMealDetail(mealId)
-                _dessertDetail.value = response.meals.firstOrNull()
+                val detail = repository.getDessertDetail(mealId)
+
+                if (detail != null) {
+                    _uiState.value = DessertDetailUiState(
+                        isLoading = false,
+                        hasError = false,
+                        mealDetail = detail
+                    )
+                } else {
+                    _uiState.value = DessertDetailUiState(
+                        isLoading = false,
+                        hasError = true
+                    )
+                }
+
             } catch (e: Exception) {
-                _hasError.value = true
-            } finally {
-                _isLoading.value = false
+                _uiState.value = DessertDetailUiState(
+                    isLoading = false,
+                    hasError = true
+                )
             }
         }
     }

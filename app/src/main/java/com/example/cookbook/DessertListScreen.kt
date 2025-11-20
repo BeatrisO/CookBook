@@ -1,7 +1,6 @@
 package com.example.cookbook.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,33 +27,29 @@ fun DessertListScreen(
     viewModel: DessertViewModel = viewModel(),
     onMealClick: (String) -> Unit
 ) {
-    val desserts by viewModel.desserts.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val hasError by viewModel.hasError.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
     when {
-        isLoading -> Box(
+        state.isLoading -> Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         }
 
-        hasError -> Box(
+        state.hasError -> Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                "Error loading desserts",
-                color = MaterialTheme.colorScheme.error
-            )
+            Text("Error loading desserts",
+            color = MaterialTheme.colorScheme.error)
         }
 
         else -> LazyColumn(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(desserts) { dessert ->
+            items(state.desserts) { dessert ->
                 DessertCard(dessert) {
                     onMealClick(dessert.idMeal)
                 }
