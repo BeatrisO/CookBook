@@ -53,6 +53,7 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.animation)
 
     val composeBom = platform("androidx.compose:compose-bom:2025.10.01")
     implementation(composeBom)

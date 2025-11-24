@@ -1,5 +1,6 @@
 package com.example.cookbook.ui.screens
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -75,6 +76,14 @@ fun DessertCard(meal: Meal, onClick: () -> Unit) {
         label = ""
     )
 
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isPressed)
+            MaterialTheme.colorScheme.surfaceVariant
+        else
+            MaterialTheme.colorScheme.surface,
+        label = ""
+    )
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,9 +99,11 @@ fun DessertCard(meal: Meal, onClick: () -> Unit) {
                 onClick()
             },
         shape = RoundedCornerShape(12.dp),
+
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = backgroundColor
         ),
+
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Row(modifier = Modifier.padding(8.dp)) {
@@ -104,6 +115,7 @@ fun DessertCard(meal: Meal, onClick: () -> Unit) {
                     .clip(RoundedCornerShape(16.dp)),
                 contentScale = ContentScale.Crop
             )
+
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(
