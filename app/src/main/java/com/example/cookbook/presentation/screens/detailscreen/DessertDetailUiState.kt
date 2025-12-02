@@ -1,4 +1,4 @@
-package com.example.cookbook.ui.screens
+package com.example.cookbook.presentation.screens.detailscreen
 
 import com.example.cookbook.data.MealDetail
 

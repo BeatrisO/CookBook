@@ -1,7 +1,7 @@
 package com.example.cookbook.data.repository
 
 import com.example.cookbook.data.MealDetail
-import com.example.cookbook.data.RetrofitInstance
+import com.example.cookbook.data.remote.RetrofitInstance
 
 class DessertDetailRepository {
 

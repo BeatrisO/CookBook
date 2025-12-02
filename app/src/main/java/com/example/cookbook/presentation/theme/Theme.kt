@@ -1,4 +1,4 @@
-package com.example.cookbook.ui.theme
+package com.example.cookbook.presentation.theme
 
 import android.app.Activity
 import androidx.compose.material3.*

@@ -1,8 +1,9 @@
-package com.example.cookbook.ui.screens
+package com.example.cookbook.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookbook.data.repository.DessertRepository
+import com.example.cookbook.presentation.screens.listscreen.DessertUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

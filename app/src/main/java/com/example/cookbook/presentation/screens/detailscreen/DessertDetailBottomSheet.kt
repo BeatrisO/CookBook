@@ -1,33 +1,38 @@
-package com.example.cookbook.ui.screens
+package com.example.cookbook.presentation.screens.detailscreen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.cookbook.data.getIngredients
+import com.example.cookbook.presentation.viewmodel.DessertDetailViewModel
 import kotlinx.coroutines.launch
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DessertDetail(
+fun DessertDetailBottomSheet(
     mealId: String,
     navController: NavController,
-    viewModel: DessertDetailViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: DessertDetailViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val mealDetail = uiState.mealDetail
+    val isLoading = uiState.isLoading
+    val hasError = uiState.hasError
+
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val scope = rememberCoroutineScope()
 
@@ -35,8 +40,8 @@ fun DessertDetail(
         viewModel.loadDessertDetail(mealId)
     }
 
-    LaunchedEffect(uiState.mealDetail, uiState.hasError) {
-        if (uiState.mealDetail != null || uiState.hasError) {
+    LaunchedEffect(mealDetail, hasError) {
+        if (mealDetail != null || hasError) {
             scope.launch {
                 if (!sheetState.isVisible) sheetState.show()
             }
@@ -56,18 +61,20 @@ fun DessertDetail(
     ) {
 
         when {
-            uiState.isLoading -> {
+            isLoading -> {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
 
-            uiState.hasError -> {
+            hasError -> {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -81,32 +88,29 @@ fun DessertDetail(
                 }
             }
 
-            uiState.mealDetail != null -> {
-                val detail = uiState.mealDetail!!
+            mealDetail != null -> {
+                val detail = mealDetail
                 val ingredients = detail.getIngredients()
 
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 16.dp, top = 8.dp),
-                    contentAlignment = Alignment.TopEnd
+                        .padding(start = 8.dp, top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+
                     IconButton(
                         onClick = {
                             scope.launch {
                                 sheetState.hide()
                                 navController.popBackStack()
                             }
-                        },
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(MaterialTheme.colorScheme.surface)
+                        }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Close,
+                            imageVector = Icons.Default.KeyboardArrowDown,
                             contentDescription = "Close",
-                            tint = MaterialTheme.colorScheme.onSurface
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
@@ -154,7 +158,7 @@ fun DessertDetail(
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.fillMaxWidth(),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            textAlign = TextAlign.Center
                         )
                     }
 
@@ -168,27 +172,31 @@ fun DessertDetail(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
-                                col1.forEach { Text("• $it", color = MaterialTheme.colorScheme.onBackground) }
+                                col1.forEach {
+                                    Text("• $it", color = MaterialTheme.colorScheme.onBackground)
+                                }
                             }
                             Column(modifier = Modifier.weight(1f)) {
-                                col2.forEach { Text("• $it", color = MaterialTheme.colorScheme.onBackground) }
+                                col2.forEach {
+                                    Text("• $it", color = MaterialTheme.colorScheme.onBackground)
+                                }
                             }
                         }
                     }
 
                     item {
                         Text(
-                            text = "Instructions",
+                            "Instructions",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
 
                     item {
                         Text(
-                            text = detail.strInstructions,
+                            detail.strInstructions,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }

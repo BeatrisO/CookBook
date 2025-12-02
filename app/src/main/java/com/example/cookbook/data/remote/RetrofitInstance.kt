@@ -1,5 +1,6 @@
-package com.example.cookbook.data
+package com.example.cookbook.data.remote
 
+import com.example.cookbook.data.MealApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

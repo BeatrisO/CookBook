@@ -15,9 +15,9 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
-import com.example.cookbook.ui.screens.DessertDetailBottomSheet
-import com.example.cookbook.ui.theme.CookBookTheme
-import com.example.cookbook.ui.screens.DessertListScreen
+import com.example.cookbook.presentation.screens.detailscreen.DessertDetailBottomSheet
+import com.example.cookbook.presentation.theme.CookBookTheme
+import com.example.cookbook.presentation.screens.listscreen.DessertListScreen
 
 
 class MainActivity : ComponentActivity() {

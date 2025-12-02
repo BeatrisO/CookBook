@@ -1,11 +1,12 @@
-package com.example.cookbook.ui.screens
+package com.example.cookbook.presentation.screens.detailscreen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,23 +15,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import androidx.navigation.NavController
 import com.example.cookbook.data.getIngredients
+import com.example.cookbook.presentation.viewmodel.DessertDetailViewModel
 import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DessertDetailBottomSheet(
+fun DessertDetail(
     mealId: String,
     navController: NavController,
-    viewModel: DessertDetailViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: DessertDetailViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val mealDetail = uiState.mealDetail
-    val isLoading = uiState.isLoading
-    val hasError = uiState.hasError
-
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val scope = rememberCoroutineScope()
 
@@ -38,8 +38,8 @@ fun DessertDetailBottomSheet(
         viewModel.loadDessertDetail(mealId)
     }
 
-    LaunchedEffect(mealDetail, hasError) {
-        if (mealDetail != null || hasError) {
+    LaunchedEffect(uiState.mealDetail, uiState.hasError) {
+        if (uiState.mealDetail != null || uiState.hasError) {
             scope.launch {
                 if (!sheetState.isVisible) sheetState.show()
             }
@@ -59,20 +59,18 @@ fun DessertDetailBottomSheet(
     ) {
 
         when {
-            isLoading -> {
+            uiState.isLoading -> {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
 
-            hasError -> {
+            uiState.hasError -> {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -86,29 +84,32 @@ fun DessertDetailBottomSheet(
                 }
             }
 
-            mealDetail != null -> {
-                val detail = mealDetail
+            uiState.mealDetail != null -> {
+                val detail = uiState.mealDetail!!
                 val ingredients = detail.getIngredients()
 
-                Row(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 8.dp, top = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(end = 16.dp, top = 8.dp),
+                    contentAlignment = Alignment.TopEnd
                 ) {
-
                     IconButton(
                         onClick = {
                             scope.launch {
                                 sheetState.hide()
                                 navController.popBackStack()
                             }
-                        }
+                        },
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(MaterialTheme.colorScheme.surface)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
+                            imageVector = Icons.Default.Close,
                             contentDescription = "Close",
-                            tint = MaterialTheme.colorScheme.onBackground
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -170,31 +171,27 @@ fun DessertDetailBottomSheet(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
-                                col1.forEach {
-                                    Text("• $it", color = MaterialTheme.colorScheme.onBackground)
-                                }
+                                col1.forEach { Text("• $it", color = MaterialTheme.colorScheme.onBackground) }
                             }
                             Column(modifier = Modifier.weight(1f)) {
-                                col2.forEach {
-                                    Text("• $it", color = MaterialTheme.colorScheme.onBackground)
-                                }
+                                col2.forEach { Text("• $it", color = MaterialTheme.colorScheme.onBackground) }
                             }
                         }
                     }
 
                     item {
                         Text(
-                            "Instructions",
+                            text = "Instructions",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
                         )
                     }
 
                     item {
                         Text(
-                            detail.strInstructions,
+                            text = detail.strInstructions,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
