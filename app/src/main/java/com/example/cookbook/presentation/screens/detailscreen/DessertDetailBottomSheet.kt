@@ -4,8 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -92,34 +91,11 @@ fun DessertDetailBottomSheet(
                 val detail = mealDetail
                 val ingredients = detail.getIngredients()
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, top = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                sheetState.hide()
-                                navController.popBackStack()
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Close",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
 
                     item {
@@ -163,22 +139,43 @@ fun DessertDetailBottomSheet(
                     }
 
                     item {
-                        val half = (ingredients.size + 1) / 2
-                        val col1 = ingredients.take(half)
-                        val col2 = ingredients.drop(half)
-
-                        Row(
+                        Card(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface
+                            ),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                col1.forEach {
-                                    Text("• $it", color = MaterialTheme.colorScheme.onBackground)
-                                }
-                            }
-                            Column(modifier = Modifier.weight(1f)) {
-                                col2.forEach {
-                                    Text("• $it", color = MaterialTheme.colorScheme.onBackground)
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+
+                                val half = (ingredients.size + 1) / 2
+                                val col1 = ingredients.take(half)
+                                val col2 = ingredients.drop(half)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        col1.forEach {
+                                            Text(
+                                                text = "• $it",
+                                                style = MaterialTheme.typography.bodyMedium
+                                            )
+                                        }
+                                    }
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        col2.forEach {
+                                            Text(
+                                                text = "• $it",
+                                                style = MaterialTheme.typography.bodyMedium
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -196,7 +193,10 @@ fun DessertDetailBottomSheet(
 
                     item {
                         Text(
-                            detail.strInstructions,
+                            text = detail.strInstructions,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                lineHeight = 22.sp
+                            ),
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
