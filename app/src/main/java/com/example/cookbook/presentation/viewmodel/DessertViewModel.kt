@@ -6,6 +6,7 @@ import com.example.cookbook.data.repository.DessertRepository
 import com.example.cookbook.presentation.screens.listscreen.DessertUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DessertViewModel(
@@ -13,7 +14,7 @@ class DessertViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DessertUiState(isLoading = true))
-    val uiState: StateFlow<DessertUiState> = _uiState
+    val uiState: StateFlow<DessertUiState> = _uiState.asStateFlow()
 
     init {
         loadDesserts()
